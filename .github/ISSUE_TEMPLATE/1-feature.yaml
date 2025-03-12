@@ -1,0 +1,30 @@
+name: "🚀 Request a Feature"
+description: "Please let us know if you have an idea on how to improve."
+labels: ["enhancement"]
+assignees:
+  - smashedr
+
+body:
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Issue Description
+      description: Please describe the feature you would like to see and why it would be beneficial.
+      placeholder: Provide as many details as possible...
+
+  - type: textarea
+    id: logs
+    validations:
+      required: false
+    attributes:
+      label: Log Output
+      description: Paste any relevant logs or output in this box.
+      placeholder: This text is automatically wrapped in a code block.
+      render: shell
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you very much for taking the time to make this report...

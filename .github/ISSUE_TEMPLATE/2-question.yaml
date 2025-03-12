@@ -1,0 +1,29 @@
+name: "❔ Ask a Question"
+description: "Feel free to ask a general question..."
+labels: ["question"]
+assignees:
+  - smashedr
+
+body:
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Question
+      description: Let us know what you are thinking.
+      placeholder: Provide as many details as possible...
+
+  - type: input
+    id: website
+    validations:
+      required: false
+    attributes:
+      label: URL
+      description: If your question is related to a URL, place it here.
+
+  - type: markdown
+    attributes:
+      value: |
+        Any issues or bugs that can be verified will be fixed!
+        Thank you very much for taking the time to make this report...
