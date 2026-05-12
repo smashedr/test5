@@ -1,0 +1,38 @@
+name: "Issue"
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+jobs:
+  issue:
+    name: "Issue"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6
+
+      - name: "Debug event.json"
+        continue-on-error: true
+        run: cat "${GITHUB_EVENT_PATH}"
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+      - name: "Debug Environment"
+        continue-on-error: true
+        run: env
+
+      - name: "Debug"
+        continue-on-error: true
+        run: |
+          echo github.repository: ${{ github.repository }}
+          echo github.event_name: ${{ github.event_name }}
+          echo github.ref_name: ${{ github.ref_name  }}
