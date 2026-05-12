@@ -1,7 +1,6 @@
 name: "Issue"
 
 on:
-  workflow_dispatch:
   issues:
     types: [opened]
 
@@ -10,29 +9,28 @@ jobs:
     name: "Issue"
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
     permissions:
       contents: write
-
     steps:
       - name: "Checkout"
         uses: actions/checkout@v6
 
-      - name: "Debug event.json"
-        continue-on-error: true
-        run: cat "${GITHUB_EVENT_PATH}"
-      - name: "Debug CTX github"
-        continue-on-error: true
-        env:
-          GITHUB_CTX: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CTX"
-      - name: "Debug Environment"
-        continue-on-error: true
-        run: env
+      - name: "Create App Token"
+        if: ${{ !github.event.release.prerelease }}
+        id: app
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: 146360
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: smashedr
+          repositories: test5
 
-      - name: "Debug"
-        continue-on-error: true
-        run: |
-          echo github.repository: ${{ github.repository }}
-          echo github.event_name: ${{ github.event_name }}
-          echo github.ref_name: ${{ github.ref_name  }}
+      - name: "AI Issue"
+        uses: smashedr/ai-issue-action@master
+        env:
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+        with:
+          model: gemini-2.5-flash
+          instructions: "You are an assistant responding to a GitHub Issue with Training Data:"
+          file: .github/instructions/*.md
+          token: ${{ steps.app.outputs.token }}
