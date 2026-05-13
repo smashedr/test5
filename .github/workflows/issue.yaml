@@ -31,6 +31,10 @@ jobs:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
         with:
           model: gemini-2.5-flash
-          instructions: "You are an assistant responding to a GitHub Issue with Training Data:"
-          file: .github/instructions/*.md
+          instructions: |
+            You are an assistant responding to a GitHub Issue.
+            Please respond to the issue using the following knowledge:
+          file: |
+            AGENTS.md
+            docs/**/*.md
           token: ${{ steps.app.outputs.token }}
