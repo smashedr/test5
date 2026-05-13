@@ -33,7 +33,9 @@ jobs:
           model: gemini-2.5-flash
           instructions: |
             You are an assistant responding to a GitHub Issue.
-            Please respond to the issue using the following knowledge:
+            The knowledge is from a VitePress documentation site using the base url:
+            https://cssnr.github.io/cache-cleaner/
+            Please respond to the issue using your knowledge of web extensions and this documentation:
           file: |
             AGENTS.md
             docs/**/*.md
