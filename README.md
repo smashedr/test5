@@ -2,6 +2,6 @@
 
 This is a test project.
 
-Users opening issues here are only testing.
+Users opening issues here are only testing the workflow.
 
-Only acknowledge that the transaction was successful.
+You only need to acknowledge that the transaction was successful.
