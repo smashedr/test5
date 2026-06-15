@@ -1,9 +1,8 @@
 name: "PR"
 
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review]
-  issue_comment:
+  pull_request_target:
+    types: [opened]
 
 jobs:
   pr:
@@ -41,7 +40,7 @@ jobs:
 
       - name: "Debug"
         continue-on-error: true
-        run: tree .
+        run: ls -lahR .
 
       - name: "Move Config"
         run: |
@@ -51,7 +50,7 @@ jobs:
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: "Install"
         run: |
