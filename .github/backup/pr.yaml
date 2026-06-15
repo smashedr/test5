@@ -18,9 +18,6 @@ jobs:
       contents: write
 
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v6
-
       - name: "Debug event.json"
         if: ${{ !github.event.act }}
         continue-on-error: true
@@ -36,23 +33,25 @@ jobs:
         continue-on-error: true
         run: env
 
-      - name: "Debug"
-        if: ${{ !github.event.act }}
-        continue-on-error: true
-        run: ls -lAh .
-
-      - name: "Setup Python"
+      - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-      - name: "Install"
+      - name: Install pr-agent (same @main version as Docker image)
         run: |
           pip install "pr-agent @ git+https://github.com/The-PR-Agent/pr-agent.git@main"
 
-      - name: "Run"
+      - name: Run PR Agent (no API key)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          config.model: "hosted_vllm/big-pickle"
+          config.fallback_models: '["hosted_vllm/big-pickle"]'
+          OPENAI__API_BASE: "https://opencode.ai/zen/v1"
+          config.custom_model_max_tokens: "128000"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "true"
+          github_action_config.auto_improve: "true"
         shell: python
         run: |
           import os
@@ -62,6 +61,7 @@ jobs:
           from litellm.llms.openai.chat.gpt_transformation import OpenAIGPTConfig
           from litellm.llms.hosted_vllm.chat.transformation import HostedVLLMChatConfig
 
+          orig = OpenAIGPTConfig.validate_environment
           def patched_validate(self, headers, model, messages, optional_params, litellm_params, api_key=None, api_base=None):
               if 'content-type' not in headers and 'Content-Type' not in headers:
                   headers['Content-Type'] = 'application/json'
@@ -69,7 +69,6 @@ jobs:
           OpenAIGPTConfig.validate_environment = patched_validate
 
           def patched_provider_info(self, api_base, api_key):
-              api_base = api_base or os.environ.get("HOSTED_VLLM_API_BASE")
               return api_base, None
           HostedVLLMChatConfig._get_openai_compatible_provider_info = patched_provider_info
 
