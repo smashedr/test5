@@ -10,6 +10,7 @@ auto_improve = true
 
 [pr_reviewer]
 enable_review_labels_effort = false
+enable_review_labels_security = false
 
 [openai]
 api_base = "https://opencode.ai/zen/v1"
