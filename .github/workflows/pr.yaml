@@ -40,7 +40,7 @@ jobs:
 
       - name: "Debug"
         continue-on-error: true
-        run: ls -lAhR .
+        run: ls -lhR .
 
       - name: "Move Config"
         run: |
