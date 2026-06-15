@@ -41,13 +41,12 @@ jobs:
 
       - name: "Debug"
         continue-on-error: true
-        run: ls -lAhR .
+        run: tree .
 
-      - name: "Move .pr_agent.toml"
-        run: mv pr/.pr_agent.toml .pr_agent.toml
-
-      - name: "Check .pr_agent.toml"
-        run: cat .pr_agent.toml
+      - name: "Move Config"
+        run: |
+          mv pr/.pr_agent.toml .pr_agent.toml
+          cat .pr_agent.toml
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
