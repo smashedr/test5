@@ -38,10 +38,11 @@ jobs:
         uses: the-pr-agent/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          config.model: "hosted_vllm/big-pickle"
-          config.fallback_models: '["hosted_vllm/big-pickle"]'
+          OPENAI_API_KEY: ""
+          config.model: "openai/big-pickle"
+          config.fallback_models: '["openai/big-pickle"]'
           config.custom_model_max_tokens: "128000"
-          HOSTED_VLLM.API_BASE: "https://opencode.ai/zen/v1"
+          OPENAI__API_BASE: "https://opencode.ai/zen/v1"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"
