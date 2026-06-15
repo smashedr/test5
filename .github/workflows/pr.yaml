@@ -38,8 +38,8 @@ jobs:
         uses: the-pr-agent/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          config.model: "big-pickle"
-          config.fallback_models: '["big-pickle"]'
+          config.model: "openai/big-pickle"
+          config.fallback_models: '["openai/big-pickle"]'
           config.custom_model_max_tokens: "128000"
           OPENAI__API_BASE: "https://opencode.ai/zen/v1"
           github_action_config.auto_review: "true"
