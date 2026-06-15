@@ -39,10 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ""
-          config.model: "openai/big-pickle"
-          config.fallback_models: '["openai/big-pickle"]'
-          config.custom_model_max_tokens: "128000"
+          config.model: "hosted_vllm/big-pickle"
+          config.fallback_models: '["hosted_vllm/big-pickle"]'
           OPENAI__API_BASE: "https://opencode.ai/zen/v1"
+          config.custom_model_max_tokens: "128000"
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"
