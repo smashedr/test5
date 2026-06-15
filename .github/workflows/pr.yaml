@@ -18,28 +18,36 @@ jobs:
       contents: write
 
     steps:
-      - name: "Checkout"
+      - name: "Checkout Configs"
         uses: actions/checkout@v6
+        with:
+          repository: cssnr/configs
+          ref: master
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            pr/.pr_agent.toml
 
       - name: "Debug event.json"
-        if: ${{ !github.event.act }}
         continue-on-error: true
         run: cat "${GITHUB_EVENT_PATH}"
       - name: "Debug CTX github"
-        if: ${{ !github.event.act }}
         continue-on-error: true
         env:
           GITHUB_CTX: ${{ toJSON(github) }}
         run: echo "$GITHUB_CTX"
       - name: "Debug Environment"
-        if: ${{ !github.event.act }}
         continue-on-error: true
         run: env
 
       - name: "Debug"
-        if: ${{ !github.event.act }}
         continue-on-error: true
-        run: ls -lAh .
+        run: ls -lAhR .
+
+      - name: "Move .pr_agent.toml"
+        run: mv pr/.pr_agent.toml .pr_agent.toml
+
+      - name: "Check .pr_agent.toml"
+        run: cat .pr_agent.toml
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
@@ -50,7 +58,7 @@ jobs:
         run: |
           pip install "pr-agent @ git+https://github.com/The-PR-Agent/pr-agent.git@main"
 
-      - name: "Run"
+      - name: "Run PR Agent"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: python
