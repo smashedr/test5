@@ -33,9 +33,16 @@ jobs:
         continue-on-error: true
         run: env
 
-      - name: PR Agent action step
-        id: pragent
-        uses: the-pr-agent/pr-agent@main
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pr-agent (same @main version as Docker image)
+        run: |
+          pip install "pr-agent @ git+https://github.com/The-PR-Agent/pr-agent.git@main"
+
+      - name: Run PR Agent (no API key)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           config.model: "hosted_vllm/big-pickle"
@@ -45,3 +52,26 @@ jobs:
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
           github_action_config.auto_improve: "true"
+        shell: python
+        run: |
+          import os
+          os.environ['OPENAI_API_KEY'] = 'not-needed'
+
+          import litellm
+          from litellm.llms.openai.chat.gpt_transformation import OpenAIGPTConfig
+          from litellm.llms.hosted_vllm.chat.transformation import HostedVLLMChatConfig
+
+          orig = OpenAIGPTConfig.validate_environment
+          def patched_validate(self, headers, model, messages, optional_params, litellm_params, api_key=None, api_base=None):
+              if 'content-type' not in headers and 'Content-Type' not in headers:
+                  headers['Content-Type'] = 'application/json'
+              return headers
+          OpenAIGPTConfig.validate_environment = patched_validate
+
+          def patched_provider_info(self, api_base, api_key):
+              return api_base, None
+          HostedVLLMChatConfig._get_openai_compatible_provider_info = patched_provider_info
+
+          from pr_agent.servers.github_action_runner import run_action
+          import asyncio
+          asyncio.run(run_action())
