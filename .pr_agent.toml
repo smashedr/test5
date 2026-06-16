@@ -12,5 +12,8 @@ auto_improve = true
 enable_review_labels_effort = false
 enable_review_labels_security = false
 
+[pr_code_suggestions]
+commitable_code_suggestions = true
+
 [openai]
 api_base = "https://opencode.ai/zen/v1"
